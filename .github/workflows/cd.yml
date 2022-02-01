@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  IS_TAGGED_BUILD: ${{ startsWith(github.ref, 'refs/tags/'" }}
+  IS_TAGGED_BUILD: ${{ startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
   build:
