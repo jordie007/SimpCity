@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  IS_TAGGED_BUILD: "startsWith(github.ref, 'refs/tags/')"
+  IS_TAGGED_BUILD: ${{ startsWith(github.ref, 'refs/tags/')" }}
 
 jobs:
   build:
@@ -34,12 +34,12 @@ jobs:
         run: dotnet restore
 
       - name: Build and Publish Tagged Artifact
-        if: "${{ env.IS_TAGGED_BUILD }}"
-        run: dotnet publish --configuration Release --no-restore --runtime win-x64
+        if: ${{ env.IS_TAGGED_BUILD }}
+        run: dotnet publish --configuration Release --no-restore --runtime win-x64 SimpCity
 
       - name: Build and Publish Dev Artifact
-        if: "!${{ env.IS_TAGGED_BUILD }}"
-        run: dotnet publish --configuration Release --no-restore --runtime win-x64 -p:DEV_BUILD_ID=${{ github.sha }}
+        if: ${{ !env.IS_TAGGED_BUILD }}
+        run: dotnet publish --configuration Release --no-restore --runtime win-x64 -p:DEV_BUILD_ID=${{ github.sha }} SimpCity
 
       - name: Rename Output
         working-directory: SimpCity\bin\Release\net5.0\win-x64\publish
