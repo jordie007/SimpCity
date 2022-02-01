@@ -7,6 +7,7 @@ on:
     # Build on push
     branches:
       - main
+      - tmpss
     # Sequence of patterns matched against refs/tags
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -33,7 +34,7 @@ jobs:
         run: dotnet restore
 
       - name: Build and Publish Tagged Artifact
-        if: ${{ env.IS_TAGGED_BUILD }}
+        if: "${{ env.IS_TAGGED_BUILD }}"
         run: dotnet publish --configuration Release --no-restore --runtime win-x64
 
       - name: Build and Publish Dev Artifact
@@ -49,28 +50,3 @@ jobs:
         with:
           name: SimpCity-Artifact
           path: SimpCity\bin\Release
-
-      - name: Create Dev Release
-        uses: softprops/action-gh-release@v1
-        if: "!${{ env.IS_TAGGED_BUILD }}"
-        with:
-          tag_name: dev-${{ github.sha }}
-          name: Release dev-${{ github.sha }}
-          target_commitish: ${{ github.sha }}
-          body: |
-            ${{ github.sha }}
-          draft: false
-          prerelease: true
-          files: |
-            SimpCity\bin\Release\net5.0\win-x64\publish\SimpCity-win-x64.exe
-
-      - name: Create Tagged Release
-        if: ${{ env.IS_TAGGED_BUILD }}
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          files: |
-            SimpCity\bin\Release\net5.0\win-x64\publish\SimpCity-win-x64.exe
